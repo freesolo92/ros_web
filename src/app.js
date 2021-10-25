@@ -4,7 +4,7 @@ var app = new Vue({
     data: {
         connected: false,
         ros: null,
-        ws_address: 'ws://192.168.178.24:9090',
+        ws_address: 'ws://10.81.170.133:9090',
         logs: [],
         message: 'Hello Vue.js!',
         loading: true,
@@ -119,11 +119,11 @@ var app = new Vue({
     setCamera: function() {
         this.cameraViewer = new MJPEGCANVAS.MultiStreamViewer({
             divID: 'mjpeg',
-            // host: '10.81.170.133',
-            host: '192.168.178.24',
+            host: '10.81.170.133',
+            // host: '192.168.178.24',
             width: 640,
             height: 480,
-            topics: ['/camera/color/image_raw', '/Aruco_Image'],
+            topics: ['/camera/color/image_raw', '/aruco_marker'],
             labels: ['Color_Image', 'Aruco_Calib'],
             port: 8080,
         })
