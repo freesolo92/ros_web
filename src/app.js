@@ -123,8 +123,8 @@ var app = new Vue({
             // host: '192.168.178.24',
             width: 640,
             height: 480,
-            topics: ['/camera/color/image_raw', '/aruco_marker', '/detectnet/overlay'],
-            labels: ['Color_Image', 'Aruco_Calib', 'Object_Detection'],
+            topics: ['/camera/color/image_raw', '/aruco_marker', '/detectnet/overlay', '/object_rect'],
+            labels: ['Color_Image', 'Aruco_Calib', 'Object_Detection', 'Object_Rect'],
             port: 8080,
         })
     },
