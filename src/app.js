@@ -4,8 +4,8 @@ var app = new Vue({
     data: {
         connected: false,
         ros: null,
-        // ws_address: 'ws://10.81.157.13:9090',
-        ws_address: 'ws://localhost:9090',
+        ws_address: 'ws://10.81.157.13:9090',
+        // ws_address: 'ws://localhost:9090',
         logs: [],
         message: 'Hello Vue.js!',
         loading: true,
@@ -36,7 +36,8 @@ var app = new Vue({
         g2w_transform_rw: 0,
         sampleIndex: -1,
         state_NewCalib: false,
-        state_GoHome: false
+        state_GoHome: false,
+        PopupMessage: "This is a ROS Test"
         
     },
     // helper methods to connect to ROS
@@ -362,6 +363,58 @@ var app = new Vue({
                 });  
             
             },
+
+            serviceStartProgramm: function() {
+                this.service = new ROSLIB.Service({
+                    ros: this.ros,
+                    name: '/ur_hardware_interface/dashboard/play',
+                    serviceType: 'std_srvs/Empty' // or maybe Trigger
+                })
+                var ref = this;
+                this.request = new ROSLIB.ServiceRequest();
+                this.service.callService(this.request, function(StartProgramm) {
+                    console.log('Result for service call on '
+                        + ref.service.name
+                        + ': '
+                        + StartProgramm);
+                    });  
+                
+                },
+
+                serviceStopProgramm: function() {
+                    this.service = new ROSLIB.Service({
+                        ros: this.ros,
+                        name: '/ur_hardware_interface/dashboard/stop',
+                        serviceType: 'std_srvs/Empty' // or maybe Trigger
+                    })
+                    var ref = this;
+                    this.request = new ROSLIB.ServiceRequest();
+                    this.service.callService(this.request, function(StopProgramm) {
+                        console.log('Result for service call on '
+                            + ref.service.name
+                            + ': '
+                            + StopProgramm);
+                        });  
+                    
+                    },
+
+                    serviceSetPopup: function() {
+                        this.service = new ROSLIB.Service({
+                            ros: this.ros,
+                            name: '/ur_hardware_interface/dashboard/popup',
+                            serviceType: 'ur_dashboard_msgs/Popup' // or maybe Trigger
+                        })
+                        this.PopupMessage
+                        var ref = this;
+                        this.request = new ROSLIB.ServiceRequest({message: ref.PopupMessage});
+                        this.service.callService(this.request, function(StopProgramm) {
+                            console.log('Result for service call on '
+                                + ref.service.name
+                                + ': '
+                                + StopProgramm);
+                            });  
+                        
+                        },
 },
 
 })
