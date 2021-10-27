@@ -54,16 +54,19 @@
         </div>
       </div>
     <!-- </div> -->
-
+    
       <div class="row">
+      
         <div class="col-md-6 row">
+        
             <div class="col-md-12 text-center">
-              <h5>Commands</h5>
+              <h5>Robot commands</h5>
+            
             </div>
-
+          
           <!-- 1st row -->
           <div class="col-md-12 text-center">
-            <button @click="forward" :disabled="loading || !connected" class="btn btn-primary">Go straight</button>
+            <button v-on:click="serviceGoHome" :disabled="loading || !connected || state_GoHome" class="btn btn-primary">Go Home</button>
             <br><br>
           </div>
 

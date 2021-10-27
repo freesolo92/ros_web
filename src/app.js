@@ -4,7 +4,8 @@ var app = new Vue({
     data: {
         connected: false,
         ros: null,
-        ws_address: 'ws://10.81.170.133:9090',
+        // ws_address: 'ws://10.81.157.13:9090',
+        ws_address: 'ws://localhost:9090',
         logs: [],
         message: 'Hello Vue.js!',
         loading: true,
@@ -34,7 +35,8 @@ var app = new Vue({
         g2w_transform_rz: 0,
         g2w_transform_rw: 0,
         sampleIndex: -1,
-        state_NewCalib: false
+        state_NewCalib: false,
+        state_GoHome: false
         
     },
     // helper methods to connect to ROS
@@ -120,8 +122,9 @@ var app = new Vue({
     setCamera: function() {
         this.cameraViewer = new MJPEGCANVAS.MultiStreamViewer({
             divID: 'mjpeg',
-            host: '10.81.170.133',
+            host: '10.81.157.13',
             // host: '192.168.178.24',
+            // host: 'localhost',
             width: 640,
             height: 480,
             topics: ['/camera/color/image_raw', '/aruco_marker', '/detectnet/overlay', '/object_rect'],
@@ -338,6 +341,26 @@ var app = new Vue({
                   + ': '
                   + PubCalibration);
               });  
+            },
+
+        serviceGoHome: function() {
+            this.service = new ROSLIB.Service({
+                ros: this.ros,
+                name: '/robot_move/goHome',
+                serviceType: 'std_srvs/Trigger'
+            })
+            this.state_GoHome = true;
+            var ref = this;
+            this.request = new ROSLIB.ServiceRequest();
+            this.service.callService(this.request, function(GoHome) {
+                ref.GoHome = GoHome
+                console.log('Result for service call on '
+                    + ref.service.name
+                    + ': '
+                    + GoHome);
+                ref.state_GoHome = false;
+                });  
+            
             },
 },
 
