@@ -149,6 +149,7 @@
           </div>
           <div class="col-md-3 ">
             <button type="button" v-on:click="serviceSaveCalibration" :disabled="loading || !connected || (sampleIndex < 2)" class="btn btn-primary btn-block">Save Calibration</button>
+            <button type="button" v-on:click="servicePubCalibration" :disabled="loading || !connected || !state_NewCalib" class="btn btn-primary btn-block">Publish Calibration</button>
           </div>
           </div>
         </div>

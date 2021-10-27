@@ -34,6 +34,7 @@ var app = new Vue({
         g2w_transform_rz: 0,
         g2w_transform_rw: 0,
         sampleIndex: -1,
+        state_NewCalib: false
         
     },
     // helper methods to connect to ROS
@@ -309,6 +310,7 @@ var app = new Vue({
             name: '/my_calibration_eye_on_hand/save_calibration',
             serviceType: 'std_srvs/Empty'
         })
+        this.state_NewCalib = true;
         var ref = this;
         this.request = new ROSLIB.ServiceRequest();
         this.service.callService(this.request, function(SavetCalibration) {
@@ -317,9 +319,26 @@ var app = new Vue({
               + ref.service.name
               + ': '
               + SavetCalibration);
-          });
-    },
-        
+          });  
+        },
+
+        servicePubCalibration: function() {
+            this.service = new ROSLIB.Service({
+                ros: this.ros,
+                name: '/my_calibration_eye_on_hand/publish_calibration',
+                serviceType: 'easy_handeye_msgs/pub'
+            })
+            this.state_NewCalib = false;
+            var ref = this;
+            this.request = new ROSLIB.ServiceRequest();
+            this.service.callService(this.request, function(PubCalibration) {
+                ref.PubCalibration = PubCalibration
+                console.log('Result for service call on '
+                  + ref.service.name
+                  + ': '
+                  + PubCalibration);
+              });  
+            },
 },
 
 })
