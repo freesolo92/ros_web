@@ -20,6 +20,7 @@ var app = new Vue({
         sampleList: [],
         calibResultTranslation: [],
         calibResultRotation: [],
+        messageGoOrange: 'lol',
         c2m_transform_x: 0,
         c2m_transform_y: 0,
         c2m_transform_z: 0,
@@ -35,6 +36,8 @@ var app = new Vue({
         g2w_transform_rz: 0,
         g2w_transform_rw: 0,
         sampleIndex: -1,
+        moveIndex: 10,
+        sampleIndexUser: 0,
         state_NewCalib: false,
         state_GoHome: false,
         PopupMessage: "This is a ROS Test"
@@ -239,6 +242,7 @@ var app = new Vue({
             serviceType: 'easy_handeye_msgs/TakeSample'
         })
         this.sampleIndex = this.sampleIndex + 1;
+        this.sampleIndexUser = this.sampleIndexUser + 1;
         var ref = this;
         this.request = new ROSLIB.ServiceRequest();
         this.service.callService(this.request, function(sampleList) {
@@ -276,7 +280,7 @@ var app = new Vue({
             name: '/my_calibration_eye_on_hand/remove_sample',
             serviceType: 'easy_handeye_msgs/RemoveSample'
         })
-        
+        this.sampleIndexUser = this.sampleIndexUser - 1
         var ref = this;
         this.request = new ROSLIB.ServiceRequest({sample_index: ref.sampleIndex});
         this.service.callService(this.request, function(sampleList) {
@@ -326,95 +330,184 @@ var app = new Vue({
           });  
         },
 
-        servicePubCalibration: function() {
-            this.service = new ROSLIB.Service({
-                ros: this.ros,
-                name: '/my_calibration_eye_on_hand/publish_calibration',
-                serviceType: 'easy_handeye_msgs/pub'
-            })
-            this.state_NewCalib = false;
-            var ref = this;
-            this.request = new ROSLIB.ServiceRequest();
-            this.service.callService(this.request, function(PubCalibration) {
-                ref.PubCalibration = PubCalibration
-                console.log('Result for service call on '
-                  + ref.service.name
-                  + ': '
-                  + PubCalibration);
-              });  
-            },
+    servicePubCalibration: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/my_calibration_eye_on_hand/publish_calibration',
+            serviceType: 'easy_handeye_msgs/pub'
+        })
+        this.state_NewCalib = false;
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(PubCalibration) {
+            ref.PubCalibration = PubCalibration
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + PubCalibration);
+            });  
+        },
 
-        serviceGoHome: function() {
-            this.service = new ROSLIB.Service({
-                ros: this.ros,
-                name: '/robot_move/goHome',
-                serviceType: 'std_srvs/Trigger'
-            })
-            this.state_GoHome = true;
-            var ref = this;
-            this.request = new ROSLIB.ServiceRequest();
-            this.service.callService(this.request, function(GoHome) {
-                ref.GoHome = GoHome
-                console.log('Result for service call on '
-                    + ref.service.name
-                    + ': '
-                    + GoHome);
-                ref.state_GoHome = false;
-                });  
-            
-            },
+    serviceSetHome: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/robot_move/set_home',
+            serviceType: 'std_srvs/Trigger'
+        })
+        this.state_GoHome = true;
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoHome) {
+            ref.GoHome = GoHome
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoHome);
+            ref.state_GoHome = false;
+            });  
+        
+        },
 
-            serviceStartProgramm: function() {
-                this.service = new ROSLIB.Service({
-                    ros: this.ros,
-                    name: '/ur_hardware_interface/dashboard/play',
-                    serviceType: 'std_srvs/Empty' // or maybe Trigger
-                })
-                var ref = this;
-                this.request = new ROSLIB.ServiceRequest();
-                this.service.callService(this.request, function(StartProgramm) {
-                    console.log('Result for service call on '
-                        + ref.service.name
-                        + ': '
-                        + StartProgramm);
-                    });  
-                
-                },
+    serviceGoHome: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: 'robot_move/go_home',
+            serviceType: 'std_srvs/Trigger'
+        })
+        this.state_GoHome = true;
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoHome) {
+            ref.GoHome = GoHome
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoHome);
+            ref.state_GoHome = false;
+            });  
+        
+        },
 
-                serviceStopProgramm: function() {
-                    this.service = new ROSLIB.Service({
-                        ros: this.ros,
-                        name: '/ur_hardware_interface/dashboard/stop',
-                        serviceType: 'std_srvs/Empty' // or maybe Trigger
-                    })
-                    var ref = this;
-                    this.request = new ROSLIB.ServiceRequest();
-                    this.service.callService(this.request, function(StopProgramm) {
-                        console.log('Result for service call on '
-                            + ref.service.name
-                            + ': '
-                            + StopProgramm);
-                        });  
-                    
-                    },
+    serviceStartProgramm: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/ur_hardware_interface/dashboard/play',
+            serviceType: 'std_srvs/Empty' // or maybe Trigger
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(StartProgramm) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + StartProgramm);
+            });  
+        
+        },
 
-                    serviceSetPopup: function() {
-                        this.service = new ROSLIB.Service({
-                            ros: this.ros,
-                            name: '/ur_hardware_interface/dashboard/popup',
-                            serviceType: 'ur_dashboard_msgs/Popup' // or maybe Trigger
-                        })
-                        this.PopupMessage
-                        var ref = this;
-                        this.request = new ROSLIB.ServiceRequest({message: ref.PopupMessage});
-                        this.service.callService(this.request, function(StopProgramm) {
-                            console.log('Result for service call on '
-                                + ref.service.name
-                                + ': '
-                                + StopProgramm);
-                            });  
-                        
-                        },
+    serviceStopProgramm: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/ur_hardware_interface/dashboard/stop',
+            serviceType: 'std_srvs/Empty' // or maybe Trigger
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(StopProgramm) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + StopProgramm);
+            });  
+        
+        },
+
+    serviceSetPopup: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/ur_hardware_interface/dashboard/popup',
+            serviceType: 'ur_dashboard_msgs/Popup' // or maybe Trigger
+        })
+        this.PopupMessage
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest({message: ref.PopupMessage});
+        this.service.callService(this.request, function(StopProgramm) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + StopProgramm);
+            });  
+        
+        },
+
+    serviceGoOrange: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/robot_move/pick_orange',
+            serviceType: 'std_srvs/Trigger'
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoOrange) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoOrange);
+                ref.messageGoOrange = GoOrange.message
+            });  
+        
+        },
+
+    serviceGoYellow: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/robot_move/pick_yellow',
+            serviceType: 'std_srvs/Trigger'
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoYellow) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoYellow);
+            });  
+        
+        },
+
+    serviceGoGreen: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/robot_move/pick_green',
+            serviceType: 'std_srvs/Trigger'
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoGreen) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoGreen);
+            });  
+        
+        },
+
+    serviceGoBlue: function() {
+        this.service = new ROSLIB.Service({
+            ros: this.ros,
+            name: '/robot_move/pick_blue',
+            serviceType: 'std_srvs/Trigger'
+        })
+        var ref = this;
+        this.request = new ROSLIB.ServiceRequest();
+        this.service.callService(this.request, function(GoBlue) {
+            console.log('Result for service call on '
+                + ref.service.name
+                + ': '
+                + GoBlue);
+            });  
+        
+        },
 },
 
 })

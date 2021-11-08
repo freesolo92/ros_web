@@ -66,26 +66,37 @@
           
           <!-- 1st row -->
           <div class="col-md-12 text-center">
-            <button v-on:click="serviceGoHome" :disabled="loading || !connected || state_GoHome" class="btn btn-primary">Go Home</button>
-            <br><br>
+            <button v-on:click="serviceStartProgramm" :disabled="loading || !connected" class="btn btn-primary">Start Programm</button>
+            <button v-on:click="serviceStopProgramm" :disabled="loading || !connected" class="btn btn-danger">Stop Programm</button>
           </div>
 
           <!-- 2nd row -->
           <div class="col-md-4 text-center">
-              <button v-on:click="serviceStartProgramm" :disabled="loading || !connected" class="btn btn-primary">Start Programm</button>
+              <button v-on:click="serviceGoBlue" :disabled="loading || !connected" class="btn btn-primary btn-block">Pick Blue</button>
+            </br>
+           
+              <button v-on:click="serviceGoGreen" :disabled="loading || !connected" class="btn btn-primary btn-block">Pick Green</button>
+            </br>
+            
+              <button v-on:click="serviceGoOrange" :disabled="loading || !connected" class="btn btn-primary btn-block">Pick Orange</button>
+         
+              <div class="p-3 mb-2 bg-info rounded text-white">{{messageGoOrange}}</div>
+            <!-- </br> -->
+           
+              <button v-on:click="serviceGoYellow" :disabled="loading || !connected" class="btn btn-primary btn-block">Pick Yellow</button>
           </div>
           <div class="col-md-4 text-center">
-              <br>
-              <button v-on:click="serviceStopProgramm" :disabled="loading || !connected" class="btn btn-danger">Stop Programm</button>
-              <br>
-              <br>
+              <button v-on:click="serviceSetHome" :disabled="loading || !connected" class="btn btn-danger">Set Home</button>
+          </br>
+          </br>
+              <button v-on:click="serviceGoHome" :disabled="loading || !connected" class="btn btn-primary">Go Home</button>
           </div>
           <div class="col-md-4 text-center">
               <button v-on:click="serviceSetPopup" :disabled="loading || !connected" class="btn btn-primary">Show Popup</button>
           </div>
           <!-- 3rd row -->
           <div class="col-md-12 text-center">
-              <button @click="backward" :disabled="loading || !connected" class="btn btn-primary">Go straight</button>
+              <!-- <button @click="backward" :disabled="loading || !connected" class="btn btn-primary">Go straight</button> -->
           </div>
         </div>
         <div class="col-md-6"> 
@@ -109,6 +120,11 @@
             <!-- {{stateExecutePlan}} -->
           </div>
           </div>
+        </br>
+          <!-- <div class="progress">
+            <div class="progress-bar w-20" role="progressbar" aria-valuenow="50" style="width: 25%" aria-valuemin="0" aria-valuemax="100" v-if="connected"></div>
+            <div class="progress-bar w-20" role="progressbar" aria-valuenow="50" style="width: 50%" aria-valuemin="0" aria-valuemax="100" v-else="disconnect"></div>
+          </div> -->
         </br>
           <div id="mjpeg"></div>
         </br>
@@ -139,7 +155,7 @@
           <div class="col-md-3 ">
             <button type="button" v-on:click="serviceRemoveSample" :disabled="loading || !connected" class="btn btn-primary btn-block">Remove Sample</button>
             <br/>
-            <div class="p-3 mb-2 bg-info rounded text-white">Sample Index: {{sampleIndex}} (Default = -1)</div>
+            <div class="p-3 mb-2 bg-info rounded text-white">Sample Index: {{sampleIndexUser}} (Default = 0)</div>
           </div>
           <div class="col-md-3 ">
             <button type="button" v-on:click="serviceComputeCalibration" :disabled="loading || !connected || (sampleIndex < 2)" class="btn btn-primary btn-block">Compute Calibration</button>
@@ -152,7 +168,7 @@
           </div>
           <div class="col-md-3 ">
             <button type="button" v-on:click="serviceSaveCalibration" :disabled="loading || !connected || (sampleIndex < 2)" class="btn btn-primary btn-block">Save Calibration</button>
-            <button type="button" v-on:click="servicePubCalibration" :disabled="loading || !connected || !state_NewCalib" class="btn btn-primary btn-block">Publish Calibration</button>
+            <button type="button" v-on:click="servicePubCalibration" :disabled="loading || !connected" class="btn btn-primary btn-block">Publish Calibration</button>
           </div>
           </div>
         </div>
