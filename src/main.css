@@ -1,0 +1,45 @@
+
+.btn{
+    margin:5px
+}
+
+.widgets{
+    background-color:	#FFFFFF ;
+     margin :1%;
+     padding: 1%;
+}
+
+.btn-primary:disabled,.btn-primary,.btn-primary:hover,.btn-primary:focus {
+    background-color:		#CF4B00;
+    border-color: 	#CF4B00;
+}
+.btn-primary:active {
+    background-color:		#CF4B00 !important;
+    border-color: 	#CF4B00!important;
+}
+
+.btn-danger:disabled,.btn-danger, .btn-danger:hover,.btn-danger:focus {
+    /* color: #fff; */
+    background-color: 	#7D7D7D;
+    border-color: 	#7D7D7D;
+}
+.btn-danger:active {
+    background-color:		#7D7D7D !important;
+    border-color: 	#7D7D7D !important;
+}
+
+.Menu{
+    background-color:	#FFFFFF ;
+     margin :1%;
+      padding: 1%;  
+}
+
+.Menu_Button{
+   border-width: 0px;
+    background-color: #F5F5F5 ; 
+    margin-left: 1%; 
+}
+
+.row{
+    margin-left:0px !important;
+}

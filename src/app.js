@@ -9,7 +9,8 @@ var app = new Vue({
         logs: [],
         message: 'Hello Vue.js!',
         loading: true,
-        m: 'Keine Änderung',
+        m: 'Test subscribe to topic',
+        wrench_msg: 'Subscribe to /wrench topic',
         stateStartPosition: false,
         CurrentPoseIndex: -1,
         stateNextPose: false,
@@ -124,6 +125,16 @@ var app = new Vue({
     },
 
     setCamera: function() {
+
+        var camera_tag=document.getElementById("mjpeg")
+            if (camera_tag.children.length > 0) {
+
+                for (child in camera_tag.children){
+                    
+                        child.remove()
+                    
+                }
+        }
         this.cameraViewer = new MJPEGCANVAS.MultiStreamViewer({
             divID: 'mjpeg',
             host: '10.81.157.13',
@@ -149,6 +160,20 @@ var app = new Vue({
         this.setSubTopic()
         this.topic.subscribe(function(m){ref.m = m.data;});
         console.log('Outer: '+ this.m);
+    },
+
+    topicWrench: function() {
+        this.topic = new ROSLIB.Topic({
+            ros: this.ros,
+            name: '/wrench',
+            messageType: 'geometry_msgs/WrenchStamped.msg'
+        })
+    },
+    _wrench: function() {
+        var ref = this;
+        this.setSubTopic()
+        this.topic.subscribe(function(wrench_msg){ref.wrench_msg = wrench_msg.wrench;});
+        console.log('Outer: '+ this.wrench_msg);
     },
 // TODO: Define variables in data methode
     serviceCheckStartPosition: function() {
